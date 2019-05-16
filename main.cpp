@@ -21,9 +21,9 @@ int main(int argc, const char * argv[]) {
 
     ParallelSamplingDensePoints PSDP ;
     PSDP.parallel_generateDP();
-    //PSDP.generateDensePoints();
+    PSDP.generateDensePoints();
     PSDP.run_parallel();
-    //PSDP.printGrid();
+    PSDP.printGrid();
     
     return 0;
 }

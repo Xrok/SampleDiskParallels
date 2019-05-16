@@ -11,15 +11,15 @@
 #include "sample.h"
 
 #define N_THREADS 2
-#define WIDTH 500
-#define HEIGHT 500
-#define L 4000
+#define WIDTH 50
+#define HEIGHT 50
+#define L 400000
 
 using namespace std;
 
 
 int numberPoints;
-int r = 30;
+int r = 10;
 float size_ = r / sqrt(2);
 int cols = WIDTH / size_;
 int rows = HEIGHT / size_;//rows
@@ -76,11 +76,13 @@ public:
             for (int j = -(r-1); j <= (r-1); j++)
             {
                 int position = ((col + i) + (row + j)) * cols;
+
                 if (position >= 0 && position < (cols * rows))
                 {
                     std::list<Sample *> neighbour = grid[position];
-                    for (auto &sample : neighbour)
+                    for (auto sample : neighbour)
                     {
+                        omp_set_lock(&writelock);
                         if (sample->status == "IDDLE")
                         {
                             p->I.push_back(sample);
@@ -89,20 +91,23 @@ public:
                         {
                             p->A.push_back(sample);
                         }
+                        omp_unset_lock(&writelock);
                     }
                 }
             }
         }
-        int sad = (col + row) * rows;
+        int sad = (col + row) * cols;
         if (sad >= 0 && sad < (cols * rows)) {
             for (auto samples : grid[sad]) {
                 if (samples->pos[0] != p->pos[0] && samples->pos[1] != p->pos[1]) {
+                    omp_set_lock(&writelock);
                     if (samples->status == "IDDLE") {
                         p->I.push_back(samples);
                     } else if (samples->status == "ACTIVE") {
                         p->A.push_back(samples);
                     }
                 }
+                omp_unset_lock(&writelock);
             }
         }
     }
@@ -198,9 +203,9 @@ public:
                 int fin = (id_thread / N_THREADS) * L;
                 int curr_index = start;
 
-                while (cloud[pointIndex[curr_index]]->status != "IDDLE" ) {
+                while (cloud[pointIndex[curr_index]]->status != "IDDLE" && curr_index < fin) {
                     curr_index++;
-                    if (curr_index == fin) break;
+                    //if (curr_index == fin) break;
                 }
                 Sample *sample = cloud[pointIndex[curr_index]];
                 sample->status = "ACTIVE";
