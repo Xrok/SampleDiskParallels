@@ -19,11 +19,11 @@ int main(int argc, const char * argv[]) {
 
     omp_init_lock(&writelock);
 
-    ParallelSamplingDensePoints PSDP;
+    ParallelSamplingDensePoints PSDP ;
     PSDP.parallel_generateDP();
-    PSDP.generateDensePoints();
+    //PSDP.generateDensePoints();
     PSDP.run_parallel();
-    PSDP.printGrid();
+    //PSDP.printGrid();
     
     return 0;
 }

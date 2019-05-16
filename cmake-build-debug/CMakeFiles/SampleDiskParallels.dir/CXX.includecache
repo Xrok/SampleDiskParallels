@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/jose/SampleDiskParallels/ParallelSamplingDensePoints.h
+stdio.h
+-
+time.h
+-
+limits
+-
+vector
+-
+list
+-
+math.h
+-
+omp.h
+-
+iostream
+-
+algorithm
+-
+sample.h
+/home/jose/SampleDiskParallels/sample.h
+
+/home/jose/SampleDiskParallels/main.cpp
+iostream
+-
+ParallelSamplingDensePoints.h
+/home/jose/SampleDiskParallels/ParallelSamplingDensePoints.h
+
+/home/jose/SampleDiskParallels/sample.h
+iostream
+-
+list
+-
+

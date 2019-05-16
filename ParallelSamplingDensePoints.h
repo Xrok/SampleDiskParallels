@@ -10,30 +10,30 @@
 #include <algorithm>
 #include "sample.h"
 
-#define N_THREADS 8
+#define N_THREADS 2
 #define WIDTH 500
 #define HEIGHT 500
-#define L 40000
+#define L 4000
 
 using namespace std;
 
 
 int numberPoints;
-const double r = 15;
-const double size_ = r / sqrt(2);
-const int cols = WIDTH / size_;
-const int fils = HEIGHT / size_;//rows
+int r = 30;
+float size_ = r / sqrt(2);
+int cols = WIDTH / size_;
+int rows = HEIGHT / size_;//rows
 
 vector<Sample *> cloud(L); //dense points cloud
 vector<int> pointIndex(L);
-vector<list<Sample *>> grid(cols *fils); //inicializar el grid !
+vector<list<Sample *>> grid(cols *rows); //inicializar el grid !
 omp_lock_t writelock;
 
 
 
 class ParallelSamplingDensePoints
 {
-    Sample **S = new Sample *[cols * fils];
+    Sample **S = new Sample *[cols * rows];
 
    
     
@@ -41,8 +41,9 @@ public:
     
 
     void printGrid()
-    {
-        for (int i =0;i<fils*cols;i++)
+    {   
+        std::cout<<L<<'\n';
+        for (int i =0;i<rows*cols;i++)
         {
             if (S[i]->status!="0")
             {
@@ -68,17 +69,19 @@ public:
         int col = ((p->pos[0]) / size_);
         int row = ((p->pos[1]) / size_);
 
-        for (int i = -1; i <= 1; i++)
+        
+
+        for (int i = -(r-1); i <= (r-1); i++)
         {
-            for (int j = -1; j <= 1; j++)
+            for (int j = -(r-1); j <= (r-1); j++)
             {
-                int position = (col + i) + (row + j) * cols;
-                if (position >= 0 && position < cols * fils)
+                int position = ((col + i) + (row + j)) * cols;
+                if (position >= 0 && position < (cols * rows))
                 {
                     std::list<Sample *> neighbour = grid[position];
                     for (auto &sample : neighbour)
                     {
-                        if (sample->status == "IDLE")
+                        if (sample->status == "IDDLE")
                         {
                             p->I.push_back(sample);
                         }
@@ -90,11 +93,12 @@ public:
                 }
             }
         }
-        for (auto &samples : grid[col + row * fils])
+        int sad = (col + row) * rows;
+        for (auto &samples : grid[sad])
         {
             if (samples->pos[0] != p->pos[0] && samples->pos[1] != p->pos[1])
             {
-                if (samples->status == "IDLE")
+                if (samples->status == "IDDLE")
                 {
                     p->I.push_back(samples);
                 }
@@ -127,10 +131,10 @@ public:
                 omp_unset_lock(&writelock);
             }
         }
-        omp_set_lock(&writelock);
-        pi->status="ACCEPTED";//atomic
-        omp_unset_lock(&writelock);
-        
+#pragma omp critical
+        {
+            pi->status = "ACCEPTED";//atomic
+        }
         return;
     }
 
@@ -155,7 +159,7 @@ public:
         omp_set_num_threads(N_THREADS);
         omp_set_num_threads(N_THREADS);
 #pragma omp parallel for
-            for(int i = 0; i < fils*cols; ++i)
+            for(int i = 0; i < rows*cols; ++i)
             {
                Sample *sample = new Sample();
                sample->status = "0";
@@ -187,45 +191,41 @@ public:
 
     void run_parallel()
     {
-        
+        int i =0;
         do {
-        omp_set_num_threads(N_THREADS);
-#pragma omp parallel 
-                {
-                    int id_thread = omp_get_thread_num()+1;
-                    int start= (id_thread-1)/N_THREADS*L;
-                    int fin = (id_thread / N_THREADS )* L;
-                    int curr_index = start;
+            omp_set_num_threads(N_THREADS);
+#pragma omp parallel num_threads(N_THREADS)
+            {
+                int id_thread = omp_get_thread_num() + 1;
+                int start = (id_thread - 1) / N_THREADS * L;
+                int fin = (id_thread / N_THREADS) * L;
+                int curr_index = start;
 
-                    while(cloud[pointIndex[curr_index]]->status != "IDDLE")
-                    {
-                        curr_index++;
-                        if (curr_index==fin)
-                        {
-                            break;
-                        }
-                    }
-                    Sample *sample = cloud[pointIndex[curr_index]];
-                    sample->status="ACTIVE";
-                    sample->prioridad = (rand() * N_THREADS + id_thread) / numeric_limits<int>::max();
-#pragma omp barrier  
-                    detectCollision(sample,2*r);
+                while (cloud[pointIndex[curr_index]]->status != "IDDLE" ) {
+                    curr_index++;
+                    if (curr_index == fin) break;
+                }
+                Sample *sample = cloud[pointIndex[curr_index]];
+                sample->status = "ACTIVE";
+                sample->prioridad = (rand() * N_THREADS + id_thread) / numeric_limits<int>::max();
 #pragma omp barrier
-                    checkStatus(sample);
-                    if (sample->status=="ACCEPTED")
-                    {
-                        omp_set_lock(&writelock);
-                        S[sample->id_grid_cell]=sample; //atomic
-                        omp_unset_lock(&writelock);
+                detectCollision(sample, 2 * r);
+#pragma omp barrier
+                checkStatus(sample);
+                if (sample->status == "ACCEPTED") {
+                    omp_set_lock(&writelock);
+                    S[sample->id_grid_cell] = sample; //atomic
+                    omp_unset_lock(&writelock);
 
-                        for(auto &i :sample->I){
-                            omp_set_lock(&writelock);
-                            i->status="REJECTED";
-                            omp_unset_lock(&writelock);
-                        }
+                    for (auto &i :sample->I) {
+                        omp_set_lock(&writelock);
+                        i->status = "REJECTED";
+                        omp_unset_lock(&writelock);
                     }
                 }
-
+            }
+            i++;
+       // }while(i<500);
         }while(existeIddle());
         
     }
