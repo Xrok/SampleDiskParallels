@@ -94,17 +94,14 @@ public:
             }
         }
         int sad = (col + row) * rows;
-        for (auto &samples : grid[sad])
-        {
-            if (samples->pos[0] != p->pos[0] && samples->pos[1] != p->pos[1])
-            {
-                if (samples->status == "IDDLE")
-                {
-                    p->I.push_back(samples);
-                }
-                else if (samples->status == "ACTIVE")
-                {
-                    p->A.push_back(samples);
+        if (sad >= 0 && sad < (cols * rows)) {
+            for (auto samples : grid[sad]) {
+                if (samples->pos[0] != p->pos[0] && samples->pos[1] != p->pos[1]) {
+                    if (samples->status == "IDDLE") {
+                        p->I.push_back(samples);
+                    } else if (samples->status == "ACTIVE") {
+                        p->A.push_back(samples);
+                    }
                 }
             }
         }
