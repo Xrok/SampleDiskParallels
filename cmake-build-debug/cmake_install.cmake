@@ -1,4 +1,4 @@
-# Install script for directory: /home/utec/Escritorio/.sergio/SampleDiskParallels
+# Install script for directory: /home/jose/SampleDiskParallels
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/utec/Escritorio/.sergio/SampleDiskParallels/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/jose/SampleDiskParallels/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

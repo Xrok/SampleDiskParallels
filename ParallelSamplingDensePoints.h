@@ -11,15 +11,15 @@
 #include "sample.h"
 
 #define N_THREADS 2
-#define WIDTH 50
-#define HEIGHT 50
-#define L 400000
+#define WIDTH 500
+#define HEIGHT 500
+#define L 8000
 
 using namespace std;
 
 
 int numberPoints;
-int r = 10;
+int r = 2;
 float size_ = r / sqrt(2);
 int cols = WIDTH / size_;
 int rows = HEIGHT / size_;//rows
@@ -64,52 +64,65 @@ public:
         return false;
     }
 
+    float distance(Sample *a,Sample *b){
+        int x1 = a->pos[0];
+        int y1 = a->pos[1];
+        int x2 = b->pos[0];
+        int y2 = b->pos[1];
+
+        int formula = pow((y2-y1),2)+pow((x2-x1),2);
+        return sqrt(formula);
+    }
+
     void detectCollision(Sample *p, int r)
     {
-        int col = ((p->pos[0]) / size_);
-        int row = ((p->pos[1]) / size_);
+        //#pragma omp critical 
+        //{
+            int col = ((p->pos[0]) / size_);
+            int row = ((p->pos[1]) / size_);
 
-        
+            
 
-        for (int i = -(r-1); i <= (r-1); i++)
-        {
-            for (int j = -(r-1); j <= (r-1); j++)
+            for (int i = -(r-1); i <= (r-1); i++)
             {
-                int position = ((col + i) + (row + j)) * cols;
-
-                if (position >= 0 && position < (cols * rows))
+                for (int j = -(r-1); j <= (r-1); j++)
                 {
-                    std::list<Sample *> neighbour = grid[position];
-                    for (auto sample : neighbour)
+                    int position = (col + i) + ((row + j) * cols);
+
+                    if (position >= 0 && position < (cols * rows))
                     {
+                        std::list<Sample *> neighbour = grid[position];
+                        for (auto sample : neighbour)
+                        {
+                            omp_set_lock(&writelock);
+                            if (sample->status == "IDDLE")
+                            {
+                                p->I.push_back(sample);
+                            }
+                            else if (sample->status == "ACTIVE")
+                            {
+                                p->A.push_back(sample);
+                            }
+                            omp_unset_lock(&writelock);
+                        }
+                    }
+                }
+            }
+            int sad = col + (row * cols);
+            if (sad >= 0 && sad < (cols * rows)) {
+                for (auto samples : grid[sad]) {
+                    if (samples->pos[0] != p->pos[0] && samples->pos[1] != p->pos[1]) {
                         omp_set_lock(&writelock);
-                        if (sample->status == "IDDLE")
-                        {
-                            p->I.push_back(sample);
+                        if (samples->status == "IDDLE") {
+                            p->I.push_back(samples);
+                        } else if (samples->status == "ACTIVE") {
+                            p->A.push_back(samples);
                         }
-                        else if (sample->status == "ACTIVE")
-                        {
-                            p->A.push_back(sample);
-                        }
-                        omp_unset_lock(&writelock);
                     }
+                    omp_unset_lock(&writelock);
                 }
             }
-        }
-        int sad = (col + row) * cols;
-        if (sad >= 0 && sad < (cols * rows)) {
-            for (auto samples : grid[sad]) {
-                if (samples->pos[0] != p->pos[0] && samples->pos[1] != p->pos[1]) {
-                    omp_set_lock(&writelock);
-                    if (samples->status == "IDDLE") {
-                        p->I.push_back(samples);
-                    } else if (samples->status == "ACTIVE") {
-                        p->A.push_back(samples);
-                    }
-                }
-                omp_unset_lock(&writelock);
-            }
-        }
+        //}
     }
     void checkStatus(Sample *pi)//pi as argument
     {
@@ -156,9 +169,6 @@ public:
     void parallel_generateDP()
     {
 
-
-
-        omp_set_num_threads(N_THREADS);
         omp_set_num_threads(N_THREADS);
 #pragma omp parallel for
             for(int i = 0; i < rows*cols; ++i)
@@ -182,7 +192,7 @@ public:
                 //agregar al grid cell correspondiente
                 int ii = sample->pos[0] / size_;
                 int j = sample->pos[1] / size_;
-                int id_grid_cell = ii + j * cols;
+                int id_grid_cell = ii + (j * cols);
                 sample->id_grid_cell = id_grid_cell;
                 // printf("id : %d cell: %d \n",data1->id_t, id_grid_cell);
                 grid[id_grid_cell].push_back(sample);

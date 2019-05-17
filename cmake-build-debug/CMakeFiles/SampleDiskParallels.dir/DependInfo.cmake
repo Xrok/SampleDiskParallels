@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/utec/Escritorio/.sergio/SampleDiskParallels/main.cpp" "/home/utec/Escritorio/.sergio/SampleDiskParallels/cmake-build-debug/CMakeFiles/SampleDiskParallels.dir/main.cpp.o"
+  "/home/jose/SampleDiskParallels/main.cpp" "/home/jose/SampleDiskParallels/cmake-build-debug/CMakeFiles/SampleDiskParallels.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
