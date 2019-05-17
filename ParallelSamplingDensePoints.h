@@ -10,16 +10,16 @@
 #include <algorithm>
 #include "sample.h"
 
-#define N_THREADS 2
-#define WIDTH 500
-#define HEIGHT 500
-#define L 8000
+#define N_THREADS 3
+#define WIDTH 100
+#define HEIGHT 100
+#define L 100000
 
 using namespace std;
 
 
 int numberPoints;
-int r = 2;
+int r = 5;
 float size_ = r / sqrt(2);
 int cols = WIDTH / size_;
 int rows = HEIGHT / size_;//rows
@@ -95,14 +95,18 @@ public:
                         for (auto sample : neighbour)
                         {
                             omp_set_lock(&writelock);
-                            if (sample->status == "IDDLE")
-                            {
-                                p->I.push_back(sample);
+                            if (distance(p,sample)<r+1){
+                                if (sample->status == "IDDLE")
+                                {
+                                    p->I.push_back(sample);
+                                }
+                                else if (sample->status == "ACTIVE")
+                                {
+                                    p->A.push_back(sample);
+                                }
+
                             }
-                            else if (sample->status == "ACTIVE")
-                            {
-                                p->A.push_back(sample);
-                            }
+                            
                             omp_unset_lock(&writelock);
                         }
                     }
@@ -112,11 +116,17 @@ public:
             if (sad >= 0 && sad < (cols * rows)) {
                 for (auto samples : grid[sad]) {
                     if (samples->pos[0] != p->pos[0] && samples->pos[1] != p->pos[1]) {
+
+
                         omp_set_lock(&writelock);
-                        if (samples->status == "IDDLE") {
-                            p->I.push_back(samples);
-                        } else if (samples->status == "ACTIVE") {
-                            p->A.push_back(samples);
+
+                        if (distance(p,samples)<r+1){
+
+                            if (samples->status == "IDDLE") {
+                                p->I.push_back(samples);
+                            } else if (samples->status == "ACTIVE") {
+                                p->A.push_back(samples);
+                            }
                         }
                     }
                     omp_unset_lock(&writelock);
@@ -218,10 +228,12 @@ public:
                     //if (curr_index == fin) break;
                 }
                 Sample *sample = cloud[pointIndex[curr_index]];
+                omp_set_lock(&writelock);
                 sample->status = "ACTIVE";
                 sample->prioridad = (rand() * N_THREADS + id_thread) / numeric_limits<int>::max();
+                omp_unset_lock(&writelock);
 #pragma omp barrier
-                detectCollision(sample, 2 * r);
+                detectCollision(sample,  2*r);
 #pragma omp barrier
                 checkStatus(sample);
                 if (sample->status == "ACCEPTED") {
