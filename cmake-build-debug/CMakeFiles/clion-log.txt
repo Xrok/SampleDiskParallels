@@ -1,4 +1,4 @@
-/opt/clion-2019.1.3/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/jose/SampleDiskParallels
+/opt/clion-2019.1.3/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/xrok/Documents/SampleDiskParallels
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/jose/SampleDiskParallels/cmake-build-debug
+-- Build files have been written to: /home/xrok/Documents/SampleDiskParallels/cmake-build-debug

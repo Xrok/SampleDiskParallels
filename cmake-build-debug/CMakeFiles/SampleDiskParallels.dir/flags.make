@@ -6,5 +6,5 @@ CXX_FLAGS =  -std=c++17 -fopenmp -g
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/jose/SampleDiskParallels/. 
+CXX_INCLUDES = -I/home/xrok/Documents/SampleDiskParallels/. 
 

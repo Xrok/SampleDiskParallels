@@ -10,19 +10,19 @@
 #include <algorithm>
 #include "sample.h"
 
-#define N_THREADS 3
-#define WIDTH 100
-#define HEIGHT 100
-#define L 100000
+#define N_THREADS 2
+#define WIDTH 500
+#define HEIGHT 500
+#define L 250000
 
 using namespace std;
 
 
 int numberPoints;
-int r = 5;
+int r = 10;
 float size_ = r / sqrt(2);
-int cols = WIDTH / size_;
-int rows = HEIGHT / size_;//rows
+int cols = 2 + (WIDTH / size_);
+int rows = 2 + (HEIGHT / size_);//rows
 
 vector<Sample *> cloud(L); //dense points cloud
 vector<int> pointIndex(L);
@@ -156,10 +156,11 @@ public:
                 omp_unset_lock(&writelock);
             }
         }
-#pragma omp critical
-        {
+        omp_set_lock(&writelock);
+
             pi->status = "ACCEPTED";//atomic
-        }
+
+        omp_unset_lock(&writelock);
         return;
     }
 
@@ -200,14 +201,15 @@ public:
                 //  printf("x : %d y : %d\n", sample->pos[0], sample->pos[1]);
                 cloud[i] = sample;
                 //agregar al grid cell correspondiente
-                int ii = sample->pos[0] / size_;
-                int j = sample->pos[1] / size_;
+                int ii = (sample->pos[0] / size_);
+                int j = (sample->pos[1] / size_);
                 int id_grid_cell = ii + (j * cols);
                 sample->id_grid_cell = id_grid_cell;
                 // printf("id : %d cell: %d \n",data1->id_t, id_grid_cell);
                 grid[id_grid_cell].push_back(sample);
                 pointIndex[i] = i;
             }
+
 
     };
 

@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/jose/SampleDiskParallels/ParallelSamplingDensePoints.h
+/home/xrok/Documents/SampleDiskParallels/ParallelSamplingDensePoints.h
 stdio.h
 -
 time.h
@@ -19,12 +19,6 @@ list
 -
 math.h
 -
-random
--
-limits
--
-utility
--
 omp.h
 -
 iostream
@@ -32,15 +26,15 @@ iostream
 algorithm
 -
 sample.h
-/home/jose/SampleDiskParallels/sample.h
+/home/xrok/Documents/SampleDiskParallels/sample.h
 
-/home/jose/SampleDiskParallels/main.cpp
+/home/xrok/Documents/SampleDiskParallels/main.cpp
 iostream
 -
 ParallelSamplingDensePoints.h
-/home/jose/SampleDiskParallels/ParallelSamplingDensePoints.h
+/home/xrok/Documents/SampleDiskParallels/ParallelSamplingDensePoints.h
 
-/home/jose/SampleDiskParallels/sample.h
+/home/xrok/Documents/SampleDiskParallels/sample.h
 iostream
 -
 list
