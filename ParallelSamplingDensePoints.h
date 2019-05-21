@@ -12,8 +12,8 @@
 
 #define N_THREADS 2
 #define WIDTH 500
-#define HEIGHT 50
-#define L 25000
+#define HEIGHT 500
+#define L 50000
 
 using namespace std;
 
@@ -81,7 +81,7 @@ public:
         {
             for (auto &s :v)
             {
-                if (distance(p,s)<sqrt(p->pos[0])){
+                if (distance(p,s)<(p->pos[0])/3){
                     if (s->status == "IDDLE")
                     {
                         p->I.push_back(s);
