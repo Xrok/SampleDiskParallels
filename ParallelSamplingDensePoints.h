@@ -288,7 +288,7 @@ public:
                 //detectCollision(sample,  2*r);
                 adaptivecollision(sample);
 //#pragma omp barrier
-                checkStatus(sample);
+               checkStatus(sample);
 
                 //omp_set_lock(&writelock);
                 if (sample->status == "ACCEPTED") {
