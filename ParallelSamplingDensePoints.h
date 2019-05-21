@@ -12,8 +12,8 @@
 
 #define N_THREADS 2
 #define WIDTH 500
-#define HEIGHT 500
-#define L 250000
+#define HEIGHT 50
+#define L 25000
 
 using namespace std;
 
@@ -28,6 +28,7 @@ vector<Sample *> cloud(L); //dense points cloud
 vector<int> pointIndex(L);
 vector<list<Sample *>> grid(cols *rows); //inicializar el grid !
 omp_lock_t writelock;
+omp_lock_t statuslock;
 
 
 
@@ -74,10 +75,30 @@ public:
         return sqrt(formula);
     }
 
+    void adaptivecollision(Sample *p)
+    {
+        for( auto &v :grid )
+        {
+            for (auto &s :v)
+            {
+                if (distance(p,s)<sqrt(p->pos[0])){
+                    if (s->status == "IDDLE")
+                    {
+                        p->I.push_back(s);
+                    }
+                    else if (s->status == "ACTIVE")
+                    {
+                        p->A.push_back(s);
+                    }
+                }
+            }
+
+        }
+    }
+
     void detectCollision(Sample *p, int r)
     {
-        //#pragma omp critical 
-        //{
+
             int col = ((p->pos[0]) / size_);
             int row = ((p->pos[1]) / size_);
 
@@ -94,8 +115,9 @@ public:
                         std::list<Sample *> neighbour = grid[position];
                         for (auto sample : neighbour)
                         {
-                            omp_set_lock(&writelock);
-                            if (distance(p,sample)<r+1){
+                            //omp_set_lock(&writelock);
+
+                            if (distance(p,sample)<=r){
                                 if (sample->status == "IDDLE")
                                 {
                                     p->I.push_back(sample);
@@ -107,7 +129,7 @@ public:
 
                             }
                             
-                            omp_unset_lock(&writelock);
+                            //omp_unset_lock(&writelock);
                         }
                     }
                 }
@@ -118,9 +140,9 @@ public:
                     if (samples->pos[0] != p->pos[0] && samples->pos[1] != p->pos[1]) {
 
 
-                        omp_set_lock(&writelock);
+                        //omp_set_lock(&writelock);
 
-                        if (distance(p,samples)<r+1){
+                        if (distance(p,samples)<=r){
 
                             if (samples->status == "IDDLE") {
                                 p->I.push_back(samples);
@@ -129,38 +151,42 @@ public:
                             }
                         }
                     }
-                    omp_unset_lock(&writelock);
+                    //omp_unset_lock(&writelock);
                 }
             }
-        //}
+
     }
+
     void checkStatus(Sample *pi)//pi as argument
     {
-        omp_set_lock(&writelock);
+        //omp_set_lock(&writelock);
         if(pi->status != "ACTIVE"){//atomic
-            omp_unset_lock(&writelock);
+           // omp_unset_lock(&writelock);
             return ;
         }
-        omp_unset_lock(&writelock);
+        //omp_unset_lock(&writelock);
 
         for (auto &q :pi->A) {
             if(q->prioridad > pi->prioridad){
+
+               // omp_set_lock(&statuslock);
                 checkStatus(q);
+                //omp_unset_lock(&statuslock);
                 
-                omp_set_lock(&writelock);
+               // omp_set_lock(&writelock);
                 if (q->status=="ACCEPTED"){//atomic
                     pi->status = "REJECTED";
-                    omp_unset_lock(&writelock);
+                    //omp_unset_lock(&writelock);
                     return;
                 }
-                omp_unset_lock(&writelock);
+               //omp_unset_lock(&writelock);
             }
         }
-        omp_set_lock(&writelock);
+      // omp_set_lock(&writelock);
 
             pi->status = "ACCEPTED";//atomic
 
-        omp_unset_lock(&writelock);
+        //omp_unset_lock(&writelock);
         return;
     }
 
@@ -215,45 +241,74 @@ public:
 
     void run_parallel()
     {
-        int i =0;
-        do {
-            omp_set_num_threads(N_THREADS);
-#pragma omp parallel num_threads(N_THREADS)
-            {
-                int id_thread = omp_get_thread_num() + 1;
-                int start = (id_thread - 1) / N_THREADS * L;
-                int fin = (id_thread / N_THREADS) * L;
-                int curr_index = start;
+        //omp_set_num_threads(N_THREADS);
 
-                while (cloud[pointIndex[curr_index]]->status != "IDDLE" && curr_index < fin) {
-                    curr_index++;
-                    //if (curr_index == fin) break;
+//#pragma omp parallel num_threads(N_THREADS)
+        {
+            /*int thread=N_THREADS;
+            int start=0;
+            int fin=0;
+            int total=0;
+            int result=0;
+            int th_id=omp_get_thread_num()+1;
+
+
+            for (int j = 0; j <th_id ; ++j) {
+
+                result=(L+(thread-1))/thread;
+                total += result;
+                thread--;
+
+            }
+
+            start = total-result;
+            fin = total-1;*/
+            int start= 0;
+            int fin = L;
+
+
+
+                do {
+
+                    int curr_index = start;
+
+                    while (cloud[pointIndex[curr_index]]->status != "IDDLE" && curr_index < fin) {
+                        curr_index++;
+
                 }
                 Sample *sample = cloud[pointIndex[curr_index]];
-                omp_set_lock(&writelock);
+
+                //omp_set_lock(&writelock);
+
                 sample->status = "ACTIVE";
-                sample->prioridad = (rand() * N_THREADS + id_thread) / numeric_limits<int>::max();
-                omp_unset_lock(&writelock);
-#pragma omp barrier
-                detectCollision(sample,  2*r);
-#pragma omp barrier
+                sample->prioridad = (rand() * N_THREADS + 1) / numeric_limits<int>::max();
+
+                //omp_unset_lock(&writelock);
+//#pragma omp barrier
+                //detectCollision(sample,  2*r);
+                adaptivecollision(sample);
+//#pragma omp barrier
                 checkStatus(sample);
+
+                //omp_set_lock(&writelock);
                 if (sample->status == "ACCEPTED") {
-                    omp_set_lock(&writelock);
+
+
                     S[sample->id_grid_cell] = sample; //atomic
-                    omp_unset_lock(&writelock);
+
 
                     for (auto &i :sample->I) {
-                        omp_set_lock(&writelock);
+                        //omp_set_lock(&writelock);
                         i->status = "REJECTED";
-                        omp_unset_lock(&writelock);
+                        //omp_unset_lock(&writelock);
                     }
-                }
-            }
-            i++;
-       // }while(i<500);
+                }//omp_unset_lock(&writelock);
+//#pragma omp barrier
+
+
         }while(existeIddle());
         
+    }
     }
 
     

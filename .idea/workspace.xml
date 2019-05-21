@@ -15,23 +15,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ParallelSamplingDensePoints.h" beforeDir="false" afterPath="$PROJECT_DIR$/ParallelSamplingDensePoints.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/a.out" beforeDir="false" afterPath="$PROJECT_DIR$/a.out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CMakeSystem.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CMakeSystem.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SampleDiskParallels.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SampleDiskParallels.dir/CXX.includecache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SampleDiskParallels.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SampleDiskParallels.dir/DependInfo.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SampleDiskParallels.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SampleDiskParallels.dir/build.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SampleDiskParallels.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SampleDiskParallels.dir/depend.internal" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SampleDiskParallels.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/SampleDiskParallels.dir/flags.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/SampleDiskParallels" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/SampleDiskParallels" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/SampleDiskParallels.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/SampleDiskParallels.cbp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/points.txt" beforeDir="false" afterPath="$PROJECT_DIR$/points.txt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -59,12 +43,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ParallelSamplingDensePoints.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="12" column="19" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="19" />
+            <state relative-caret-position="223">
+              <caret line="83" column="60" selection-start-line="83" selection-start-column="60" selection-end-line="83" selection-end-column="60" />
               <folding>
                 <element signature="e#947#1142#0" />
                 <element signature="e#1148#1386#0" />
-                <element signature="e#1392#3485#0" />
                 <element signature="e#3490#4310#0" />
               </folding>
             </state>
@@ -176,12 +159,12 @@
       <workItem from="1558064168896" duration="6351000" />
       <workItem from="1558072232783" duration="834000" />
       <workItem from="1558096466077" duration="18000" />
-      <workItem from="1558392753667" duration="814000" />
+      <workItem from="1558392753667" duration="8203000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="29225000" />
+    <option name="totallyTimeSpent" value="36614000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="2560" y="360" width="1920" height="1080" extended-state="6" />
@@ -198,7 +181,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" />
       <window_info anchor="bottom" id="Messages" order="8" weight="0.32944915" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.32838982" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.24788135" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="11" weight="0.32962528" />
       <window_info anchor="bottom" id="CMake" order="12" weight="0.32838982" />
@@ -353,12 +336,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ParallelSamplingDensePoints.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="12" column="19" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="19" />
+        <state relative-caret-position="223">
+          <caret line="83" column="60" selection-start-line="83" selection-start-column="60" selection-end-line="83" selection-end-column="60" />
           <folding>
             <element signature="e#947#1142#0" />
             <element signature="e#1148#1386#0" />
-            <element signature="e#1392#3485#0" />
             <element signature="e#3490#4310#0" />
           </folding>
         </state>
