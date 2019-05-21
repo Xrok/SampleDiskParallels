@@ -28,6 +28,7 @@ vector<Sample *> cloud(L); //dense points cloud
 vector<int> pointIndex(L);
 vector<list<Sample *>> grid(cols *rows); //inicializar el grid !
 omp_lock_t writelock;
+omp_lock_t checklock;
 
 
 
@@ -237,18 +238,21 @@ public:
 #pragma omp barrier
                 detectCollision(sample,  2*r);
 #pragma omp barrier
+
+                omp_set_lock(&checklock);
                 checkStatus(sample);
                 if (sample->status == "ACCEPTED") {
-                    omp_set_lock(&writelock);
+                    //omp_set_lock(&writelock);
                     S[sample->id_grid_cell] = sample; //atomic
-                    omp_unset_lock(&writelock);
+                    //omp_unset_lock(&writelock);
 
                     for (auto &i :sample->I) {
-                        omp_set_lock(&writelock);
+                        //omp_set_lock(&writelock);
                         i->status = "REJECTED";
-                        omp_unset_lock(&writelock);
+                        //omp_unset_lock(&writelock);
                     }
                 }
+                omp_unset_lock(&checklock);
             }
             i++;
        // }while(i<500);
