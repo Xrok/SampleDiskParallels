@@ -11,9 +11,9 @@
 #include "sample.h"
 
 #define N_THREADS 8
-#define WIDTH 100
-#define HEIGHT 100
-#define L 10000
+#define WIDTH 500
+#define HEIGHT 500
+#define L 250000
 
 using namespace std;
 
